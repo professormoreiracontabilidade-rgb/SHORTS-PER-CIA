@@ -1,59 +1,98 @@
-
-<!DOCTYPE html><html lang="pt-br"><head><meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Quiz Show Perícia Shorts</title>
+<title>Quiz Perícia Shorts</title>
 <style>
-body{margin:0;background:#0b1d48;font-family:Arial,sans-serif;color:#fff;display:flex;justify-content:center}
-#app{width:420px;min-height:100vh;padding:18px;box-sizing:border-box}
-h1,h2{text-align:center;margin:4px 0}h1{color:#ffd54f}
-#phase{text-align:center;font-size:22px;margin:8px}
-#timer{font-size:72px;font-weight:bold;text-align:center}
-#bar{height:12px;background:#355;border-radius:8px;overflow:hidden}
-#fill{height:100%;background:#4caf50;width:100%;transition:width 1s linear}
-.card{background:#fff;color:#111;border-radius:18px;padding:18px;margin-top:12px}
-.alt{padding:10px;background:#eef;border-radius:10px;margin:8px 0}
+body{margin:0;background:#0b1d48;font-family:Arial,sans-serif;color:#fff}
+.tela{display:none;justify-content:center;align-items:center;height:100vh;padding:20px;box-sizing:border-box}
+.ativa{display:flex}
+.box{width:420px;text-align:center}
+h1{color:#ffd54f;margin:8px 0;font-size:42px}
+h2{margin:8px 0;font-size:30px}
+h3{margin:8px 0;font-size:24px}
+#timer{font-size:72px;font-weight:bold}
+#bar{height:12px;background:#355;border-radius:10px;overflow:hidden}
+#fill{height:100%;background:#39d353;width:100%;transition:width 1s linear}
+.card{background:#fff;color:#111;border-radius:18px;padding:18px;text-align:left;margin-top:15px}
+.alt{background:#eef;padding:10px;border-radius:10px;margin:8px 0}
 .correct{background:#98f098}
-.comment{display:none;background:#fff3cd;border-radius:12px;padding:12px;margin-top:12px}
-</style></head><body><div id="app">
-<h2>CURSO DE CONTABILIDADE</h2><h1>PROFESSOR MOREIRA</h1>
-<div id="phase"></div><div id="timer">20</div>
-<div id="bar"><div id="fill"></div></div>
-<div class="card"><div id="q"></div><div id="a"></div><div id="c" class="comment"></div></div>
+.comment{display:none;background:#fff3cd;padding:12px;border-radius:10px;margin-top:12px}
+</style></head>
+<body>
+<div id="intro" class="tela ativa">
+<div class="box">
+<h1>QUIZ DE PERÍCIA<br>CONTÁBIL</h1>
+<h2>CURSO DE CONTABILIDADE<br>PROFESSOR MOREIRA</h2>
+<h3>WhatsApp<br>61 98532-3574</h3>
+<div style="margin-top:30px;font-size:28px">Começando em <span id="introTimer">10</span>s</div>
 </div>
+</div>
+
+<div id="quiz" class="tela">
+<div class="box">
+<h2>Curso de Contabilidade<br>Professor Moreira</h2>
+<div id="phase"></div>
+<div id="timer">20</div>
+<div id="bar"><div id="fill"></div></div>
+<div class="card">
+<div id="q"></div>
+<div id="a"></div>
+<div id="c" class="comment"></div>
+</div>
+</div>
+</div>
+
 <script>
 const qs=[
-{q:"Segundo a NBC PP 01, o perito contábil deve:",a:["Ser advogado","Ser contador registrado no CRC","Ser administrador","Ser economista"],c:1,m:"O exercício da perícia é privativo do contador registrado."},
+{q:"Segundo a NBC PP 01, o perito contábil deve:",a:["Ser advogado","Ser contador registrado no CRC","Ser administrador","Ser economista"],c:1,m:"A perícia contábil é privativa do contador registrado."},
 {q:"O assistente técnico é:",a:["Nomeado pelo juiz","Indicado pela parte","Servidor","Promotor"],c:1,m:"É indicado pela parte."},
-{q:"Planejamento da perícia serve para:",a:["Fixar sentença","Definir objetivos e metodologia","Encerrar","Dispensar diligências"],c:1,m:"Define metodologia, recursos e objetivos."},
-{q:"Hipótese de suspeição:",a:["Especialização","Receber presentes","Experiência","CRC"],c:1,m:"Receber presentes compromete a imparcialidade."},
-{q:"Na recusa de documentos:",a:["Ignorar","Comunicar a autoridade","Encerrar","Destruir autos"],c:1,m:"O perito comunica a autoridade competente."},
+{q:"Planejamento da perícia:",a:["Dispensável","Define objetivos","Substitui sentença","É opcional"],c:1,m:"Define metodologia e objetivos."},
+{q:"Suspeição:",a:["Especialização","Receber presentes","CRC","Experiência"],c:1,m:"Receber presentes gera suspeição."},
+{q:"Recusa de documentos:",a:["Ignorar","Comunicar autoridade","Encerrar","Destruir"],c:1,m:"Comunica à autoridade."},
 {q:"Perícia arbitral:",a:["Só CPC","Lei de Arbitragem","CLT","CP"],c:1,m:"Segue a Lei de Arbitragem."},
-{q:"O laudo pericial deve:",a:["Ser verbal","Conter fundamentação técnica","Dispensar conclusão","Ser assinado pelo juiz"],c:1,m:"O laudo deve apresentar fundamentação técnica e conclusão."}
+{q:"Laudo pericial:",a:["Verbal","Fundamentado","Sem conclusão","Juiz assina"],c:1,m:"Deve ser fundamentado tecnicamente."}
 ];
-let i=0,tempo=20,modo="q";
-const q=document.getElementById("q"),a=document.getElementById("a"),c=document.getElementById("c");
-function desenha(){
- document.getElementById("phase").textContent="Questão "+(i+1)+" de "+qs.length;
- q.innerHTML="<b>"+qs[i].q+"</b>";
- a.innerHTML="";
- qs[i].a.forEach((t,n)=>{let d=document.createElement("div");d.className="alt"+(modo=="r"&&n==qs[i].c?" correct":"");d.textContent=String.fromCharCode(65+n)+") "+t;a.appendChild(d);});
- c.style.display=modo=="r"?"block":"none";
- c.innerHTML="<b>Comentário do Professor Moreira</b><br>"+qs[i].m;
+let intro=10;
+const introInt=setInterval(()=>{
+ intro--;
+ document.getElementById('introTimer').textContent=intro;
+ if(intro<=0){
+   clearInterval(introInt);
+   document.getElementById('intro').classList.remove('ativa');
+   document.getElementById('quiz').classList.add('ativa');
+   iniciarQuiz();
+ }
+},1000);
+
+let i=0,modo='q',tempo=20;
+function draw(){
+phase.textContent='Questão '+(i+1)+' de '+qs.length;
+q.innerHTML='<b>'+qs[i].q+'</b>';
+a.innerHTML='';
+qs[i].a.forEach((t,n)=>{let d=document.createElement('div');d.className='alt'+(modo=='r'&&n==qs[i].c?' correct':'');d.textContent=String.fromCharCode(65+n)+') '+t;a.appendChild(d);});
+c.style.display=modo=='r'?'block':'none';
+c.innerHTML='<b>Comentário do Professor Moreira</b><br>'+qs[i].m;
 }
-desenha();
-const inter=setInterval(()=>{
+function iniciarQuiz(){
+draw();
+setInterval(()=>{
  tempo--;
- document.getElementById("timer").textContent=tempo;
- document.getElementById("fill").style.width=((modo=="q"?tempo/20:tempo/15)*100)+"%";
+ timer.textContent=tempo;
+ fill.style.width=((modo=='q'?tempo/20:tempo/15)*100)+'%';
  if(tempo<=0){
-   if(modo=="q"){modo="r";tempo=15;desenha();}
+   if(modo=='q'){modo='r';tempo=15;draw();}
    else{
-      i++;
-      if(i>=qs.length){
-        clearInterval(inter);
-        document.body.innerHTML='<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#0b1d48;color:#fff;font-family:Arial;text-align:center;padding:30px"><div><h1 style="color:#ffd54f">CURSO DE CONTABILIDADE</h1><h1>PROFESSOR MOREIRA</h1><h2>TRABALHANDO 24 HORAS POR DIA<br>PARA SUA APROVAÇÃO<br>NO EXAME DE SUFICIÊNCIA</h2></div></div>';
-      }else{modo="q";tempo=20;desenha();}
+    i++;
+    if(i>=qs.length){
+      document.body.innerHTML='<div class="tela ativa"><div class="box"><h1>CURSO DE CONTABILIDADE</h1><h2>PROFESSOR MOREIRA</h2><h2>TRABALHANDO 24 HORAS POR DIA<br>PARA SUA APROVAÇÃO<br>NO EXAME DE SUFICIÊNCIA</h2></div></div>';
+      return;
+    }
+    modo='q';tempo=20;draw();
    }
  }
 },1000);
-</script></body></html>
+}
+</script>
+</body></html>
